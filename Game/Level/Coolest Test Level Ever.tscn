@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://cele3cjux4gv8"]
+
+[ext_resource type="PackedScene" uid="uid://qphmhwpq6niq" path="res://Vehicles/Bike.tscn" id="1_mpqkv"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_picib"]
+a = Vector2(2e+06, 0)
+b = Vector2(-400, 0)
+
+[sub_resource type="Curve" id="Curve_qjgjo"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.43956), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_5x040"]
+width = 800
+curve = SubResource("Curve_qjgjo")
+
+[node name="CoolestTestLevelEver" type="Node2D"]
+
+[node name="Bike" parent="." instance=ExtResource("1_mpqkv")]
+position = Vector2(0, -45)
+center_of_mass = Vector2(-50, -15)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("SegmentShape2D_picib")
+debug_color = Color(0, 0.647059, 0.168627, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+texture = SubResource("CurveTexture_5x040")
+
+[node name="Camera2D" type="Camera2D" parent="."]

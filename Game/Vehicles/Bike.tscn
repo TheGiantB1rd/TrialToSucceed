@@ -1,0 +1,89 @@
+[gd_scene load_steps=12 format=3 uid="uid://qphmhwpq6niq"]
+
+[ext_resource type="Script" path="res://Vehicles/Bike.gd" id="1_0alkw"]
+[ext_resource type="Texture2D" uid="uid://dhl41ydv7rm5w" path="res://Art/Back Wheel.png" id="2_8jv0x"]
+[ext_resource type="Texture2D" uid="uid://cti3lca1it6s0" path="res://Art/Frame.png" id="3_6hyo2"]
+[ext_resource type="Texture2D" uid="uid://dcdcij6p3ao2k" path="res://Art/Front Wheel.png" id="3_gwqck"]
+
+[sub_resource type="Curve" id="Curve_ybagx"]
+max_value = 400.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 400), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_s37ys"]
+max_value = 1000.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.4, 750), 0.0, 0.0, 0, 0, Vector2(1, 1000), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_82h0s"]
+radius = 15.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_36s7r"]
+radius = 15.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u6ax0"]
+size = Vector2(15, 30)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bqsqq"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yi41f"]
+width = 15
+height = 30
+noise = SubResource("FastNoiseLite_bqsqq")
+
+[node name="Bike" type="RigidBody2D" node_paths=PackedStringArray("back_wheel", "front_wheel", "player")]
+mass = 3.0
+gravity_scale = 0.65
+center_of_mass_mode = 1
+center_of_mass = Vector2(-12, -15)
+script = ExtResource("1_0alkw")
+back_wheel = NodePath("Back Axis/Back Wheel")
+front_wheel = NodePath("Front Axis/Front Wheel")
+player = NodePath("Player")
+spin_velocity = SubResource("Curve_ybagx")
+spin_base_velocity = 600.0
+acceleration = SubResource("Curve_s37ys")
+base_acceleration = 8000.0
+max_feasible_velocity = 50.0
+
+[node name="Back Axis" type="PinJoint2D" parent="."]
+position = Vector2(-25, 0)
+node_a = NodePath("..")
+node_b = NodePath("Back Wheel")
+motor_target_velocity = 3.49066
+
+[node name="Back Wheel" type="RigidBody2D" parent="Back Axis"]
+
+[node name="Wheel" type="CollisionShape2D" parent="Back Axis/Back Wheel"]
+shape = SubResource("CircleShape2D_82h0s")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="Back Axis/Back Wheel"]
+texture = ExtResource("2_8jv0x")
+
+[node name="Front Axis" type="PinJoint2D" parent="."]
+position = Vector2(25, 0)
+node_a = NodePath("..")
+node_b = NodePath("Front Wheel")
+motor_target_velocity = 3.49066
+
+[node name="Front Wheel" type="RigidBody2D" parent="Front Axis"]
+
+[node name="Wheel" type="CollisionShape2D" parent="Front Axis/Front Wheel"]
+shape = SubResource("CircleShape2D_36s7r")
+debug_color = Color(0.992157, 0, 0.254902, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="Front Axis/Front Wheel"]
+texture = ExtResource("3_gwqck")
+
+[node name="Frame" type="Sprite2D" parent="."]
+position = Vector2(0, -15)
+texture = ExtResource("3_6hyo2")
+
+[node name="Player" type="CollisionShape2D" parent="."]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_u6ax0")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = SubResource("NoiseTexture2D_yi41f")
